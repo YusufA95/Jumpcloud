@@ -1,0 +1,57 @@
+$moduleName = "JumpCloud"
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+
+# If the module hasn't been installed
+if (-not (Get-Module -ListAvailable -Name $moduleName)) {
+    # Install module
+    Install-Module -Name $moduleName -Force -Scope CurrentUser
+
+    # check by waiting for the module to load
+    while (-not (Get-Module -ListAvailable -Name $moduleName)) {
+        Start-Sleep -Seconds 1
+    }
+
+    # Print message after module is loaded
+    Write-Host "$moduleName has been installed."
+} else {
+    # Print message if module is already installed
+    Write-Host "$moduleName already installed."
+}
+
+$seriNo = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
+Connect-JCOnline YourAPI
+$newHostName = (Get-JCSystem -serialNumber $seriNo).displayname
+Rename-Computer -NewName $newHostName -Force 
+
+
+
+-------
+
+To put it simply. You may have changed the display name in Jumpcloud. If you also want to make them automatically local hostname, this code will be useful for you.
+
+Install NuGet Package Provider:
+The script attempts to install the NuGet package provider with a minimum version of 2.8.5.201 using the Install-PackageProvider cmdlet. This provider is often used for package management in PowerShell.
+
+Check for Module Installation:
+It checks if a module named "JumpCloud" is installed. This is done using the Get-Module cmdlet with the -ListAvailable parameter to list available modules.
+
+Install JumpCloud Module (if not already installed):
+If the "JumpCloud" module is not found, the script proceeds to install it using the Install-Module cmdlet with the -Name parameter set to "JumpCloud". It installs the module with the -Force parameter to suppress any confirmation prompts and installs it for the current user only (-Scope CurrentUser).
+
+Wait for Module to Load:
+After installation, it waits for the module to load by repeatedly checking if the module is available using Get-Module. This is done in a loop with Start-Sleep cmdlet to wait for one second between each check.
+
+Print Installation Status:
+Once the module is loaded, it prints a message indicating that the "JumpCloud" module has been installed. If the module was already installed, it prints a message stating that it's already installed.
+
+Get Serial Number of BIOS:
+It retrieves the serial number of the system BIOS using the Get-WmiObject cmdlet targeting the Win32_BIOS class. The serial number is stored in the variable $seriNo.
+
+Connect to JumpCloud Online:
+It connects to JumpCloud Online using the Connect-JCOnline cmdlet. The command is attempting to connect with a specific identifier ("b014b3ec37a92b7cf9573fa9e3b4cca9a5b36e92"), which might be an API key or another form of identification.
+
+Retrieve New Hostname from JumpCloud:
+It retrieves the new hostname from JumpCloud using the serial number obtained earlier. It fetches the display name of the system associated with the provided serial number.
+
+Rename Computer:
+Finally, it renames the computer to the new hostname obtained from JumpCloud using the Rename-Computer cmdlet. The -NewName parameter is set to the new hostname, and -Force is used to suppress any prompts.
