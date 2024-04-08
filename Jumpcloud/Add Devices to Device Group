@@ -1,0 +1,20 @@
+Connect-JCConnect YOURAPIKEY
+
+# Read CSV Path
+$csvFilePath = 'CSVPATH'
+
+# Read system IDs from CSV file
+$systemIDs = Import-Csv -Path $csvFilePath
+
+foreach ($system in $systemIDs) {
+    # Get the system ID
+    $systemID = $system.SystemID
+    
+    try {
+        # Add device to system group
+        Add-JCSystemGroupMember -GroupName 'DEVICEGROUPNAME' -SystemID $systemID
+        Write-Host "System ID $systemID successfully added to 'DEVICEGROUPNAME"
+    } catch {
+        Write-Error "Failed to add System ID $systemID to 'DEVICEGROUPNAME' group. Error: $_"
+    }
+}
