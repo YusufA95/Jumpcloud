@@ -1,0 +1,3 @@
+Get all policies on Jumpcloud Portal
+`Get-JCPolicy | Select-Object -ExpandProperty Name
+`
