@@ -1,0 +1,8 @@
+### # Get-JcSdkSystem retrieve data using the command
+$veriler = Get-JcSdkSystem | Select-Object -Property Hostname, LastContact
+
+### # Path to save the CSV file
+$dosyaYolu = "C:\Users\y.abagay\Desktop\3months.csv"
+
+### # Export data to CSV file
+$veriler | Export-Csv -Path $dosyaYolu -NoTypeInformation
