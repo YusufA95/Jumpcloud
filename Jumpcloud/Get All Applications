@@ -1,0 +1,72 @@
+function Export-WindowsPrograms {
+    # Fetch all windows systems
+    $windowsSystems = Get-JcSdkSystem -filter "osFamily:eq:windows"
+    $appsList = New-Object System.Collections.ArrayList
+    for ($i = 0; $i -lt $windowsSystems.Count; $i++) {
+        <# Action that will repeat until the condition is met #>
+        $system = $windowsSystems[$i]
+        $PercentComplete = [int](($i / $windowsSystems.Count) * 100)
+        Write-Progress -Activity "Building System App Report" -Status "$PercentComplete% Complete: Processing System: $($system.Hostname)" -PercentComplete $PercentComplete
+        $apps = Get-JCSystemApp -SystemID $system.id
+        foreach ($app in $apps) {
+            $appDetails = [PSCustomObject]@{
+                SystemHostname    = ($windowsSystems | Where-object { ($_.id -eq $app.systemId ) }).Hostname
+                SystemDisplayName = ($windowsSystems | Where-object { ($_.id -eq $app.systemId ) }).DisplayName
+                AppName           = $app.name
+                AppVersion        = $app.version
+            }
+            $appsList.add($appDetails) | Out-Null
+        }
+    }
+    $appsList | Export-Csv -Path "~/windowsPrograms.csv" -NoTypeInformation
+}
+# Execute the function
+Export-WindowsPrograms
+function Export-MacPrograms {
+    # Fetch all mac systems
+    $macSystems = Get-JcSdkSystem -filter "osFamily:eq:darwin"
+    $appsList = New-Object System.Collections.ArrayList
+    for ($i = 0; $i -lt $macSystems.Count; $i++) {
+        <# Action that will repeat until the condition is met #>
+        $system = $macSystems[$i]
+        $PercentComplete = [int](($i / $macSystems.Count) * 100)
+        Write-Progress -Activity "Building System App Report" -Status "$PercentComplete% Complete: Processing System: $($system.Hostname)" -PercentComplete $PercentComplete
+        $apps = Get-JCSystemApp -SystemID $system.id
+        foreach ($app in $apps) {
+            $appDetails = [PSCustomObject]@{
+                SystemHostname    = ($macSystems | Where-object { ($_.id -eq $app.systemId ) }).Hostname
+                SystemDisplayName = ($macSystems | Where-object { ($_.id -eq $app.systemId ) }).DisplayName
+                AppName           = $app.name
+                AppVersion        = $app.BundleShortVersion
+            }
+            $appsList.add($appDetails) | Out-Null
+        }
+    }
+    $appsList | Export-Csv -Path "~/macPrograms.csv" -NoTypeInformation
+}
+# Execute the function
+Export-MacPrograms
+function Export-LinuxPrograms {
+    # Fetch all linux systems
+    $linuxSystems = Get-JcSdkSystem -filter "osFamily:eq:linux"
+    $appsList = New-Object System.Collections.ArrayList
+    for ($i = 0; $i -lt $linuxSystems.Count; $i++) {
+        <# Action that will repeat until the condition is met #>
+        $system = $linuxSystems[$i]
+        $PercentComplete = [int](($i / $linuxSystems.Count) * 100)
+        Write-Progress -Activity "Building System App Report" -Status "$PercentComplete% Complete: Processing System: $($system.Hostname)" -PercentComplete $PercentComplete
+        $apps = Get-JCSystemApp -SystemID $system.id
+        foreach ($app in $apps) {
+            $appDetails = [PSCustomObject]@{
+                SystemHostname    = ($linuxSystems | Where-object { ($_.id -eq $app.systemId ) }).Hostname
+                SystemDisplayName = ($linuxSystems | Where-object { ($_.id -eq $app.systemId ) }).DisplayName
+                AppName           = $app.name
+                AppVersion        = $app.version
+            }
+            $appsList.add($appDetails) | Out-Null
+        }
+    }
+    $appsList | Export-Csv -Path "~/linuxPrograms.csv" -NoTypeInformation
+}
+# Execute the function
+Export-LinuxPrograms
