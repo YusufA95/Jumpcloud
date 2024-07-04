@@ -2,7 +2,7 @@
 $data = Get-JcSdkSystem | Select-Object -Property Hostname, LastContact
 
 ### #Path to save the CSV file
-$filePATH = "C:\Users\y.abagay\Desktop\3months.csv"
+$filePATH = "C:\Users\username\Desktop\3months.csv"
 
 ### #Export data to CSV file
 $data | Export-Csv -Path $filePATH -NoTypeInformation
