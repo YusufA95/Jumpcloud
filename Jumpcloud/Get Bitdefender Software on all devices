@@ -1,25 +1,24 @@
-# Retrieve all systems with hostname, Serial Number, and _id
-$allSystems = Get-JCSystem -returnProperties hostname, serialNumber
+# Retrieve all systems with specified properties
+$allSystems = Get-JCSystem -returnProperties hostname, serialNumber, displayName, description
 
-# Retrieve  Windows systems with Bitdefender installed
+# Retrieve Windows systems with Bitdefender installed
 $windowsSystems = Get-JCSystemApp -Name "Bitdefender Endpoint Security Tools" -SystemOS "windows" | Select-Object -ExpandProperty SystemID
 
-# Retrieve Mac systems with Bitdefender
+# Retrieve Mac systems with Bitdefender installed
 $macbookSystems = Get-JCSystemApp -Name "EndpointSecurityforMac" -SystemOS "macOS" | Select-Object -ExpandProperty SystemID
 
 # Combine Windows and Mac systems into a single variable
 $Bitdefenderapp = $windowsSystems + $macbookSystems
 
 $results = @()
-
 $Bitdefender = @()
 
-# Loop through each system and determine S
+# Loop through each system and determine if Bitdefender is installed
 foreach ($system in $allSystems) {
     $status = if ($Bitdefenderapp -contains $system._id) {
-        "bitdefender Installed"
+        "Bitdefender Installed"
     } else {
-        "bitdefender isn't installed"
+        "Bitdefender isn't installed"
         # Add the system ID to the Bitdefender array
         $Bitdefender += $system._id
     }
@@ -29,12 +28,12 @@ foreach ($system in $allSystems) {
         Hostname = $system.hostname
         "Serial Number" = $system.serialNumber
         _id = $system._id
+        "Display Name" = $system.displayName
+        "Description" = $system.description  # Description özelliği artık mevcut
         "Bitdefender Status" = $status
     }
     $results += $result
 }
 
 # Export the results to a CSV file
-$results | Export-Csv -Path "CSVPATH\bitdefender.csv" -NoTypeInformation
-
-
+$results | Export-Csv -Path "C:\Users\Yusuf\Desktop\JC\bitdefender.csv" -NoTypeInformation
