@@ -29,11 +29,11 @@ foreach ($system in $allSystems) {
         "Serial Number" = $system.serialNumber
         _id = $system._id
         "Display Name" = $system.displayName
-        "Description" = $system.description  # Description özelliği artık mevcut
+        "Description" = $system.description  
         "Bitdefender Status" = $status
     }
     $results += $result
 }
 
 # Export the results to a CSV file
-$results | Export-Csv -Path "C:\Users\Yusuf\Desktop\JC\bitdefender.csv" -NoTypeInformation
+$results | Export-Csv -Path "path\bitdefender.csv" -NoTypeInformation
